@@ -1,0 +1,43 @@
+action: GLOB, msg: packaging
+cwd: /Users/nanakochung/Desktop/School/Senior Year/App Sec/assign-2
+cmd: /usr/local/opt/python@2/bin/python2.7 setup.py sdist --formats=zip --dist-dir .tox/dist
+running sdist
+running egg_info
+writing requirements to my_tox_tested_package.egg-info/requires.txt
+writing my_tox_tested_package.egg-info/PKG-INFO
+writing top-level names to my_tox_tested_package.egg-info/top_level.txt
+writing dependency_links to my_tox_tested_package.egg-info/dependency_links.txt
+writing entry points to my_tox_tested_package.egg-info/entry_points.txt
+reading manifest file 'my_tox_tested_package.egg-info/SOURCES.txt'
+writing manifest file 'my_tox_tested_package.egg-info/SOURCES.txt'
+warning: sdist: standard file not found: should have one of README, README.rst, README.txt, README.md
+
+running check
+warning: check: missing required meta-data: url
+
+warning: check: missing meta-data: either (author and author_email) or (maintainer and maintainer_email) must be supplied
+
+creating my-tox-tested-package-0.0.1
+creating my-tox-tested-package-0.0.1/my_tox_tested_package.egg-info
+copying files to my-tox-tested-package-0.0.1...
+copying setup.py -> my-tox-tested-package-0.0.1
+copying my_tox_tested_package.egg-info/PKG-INFO -> my-tox-tested-package-0.0.1/my_tox_tested_package.egg-info
+copying my_tox_tested_package.egg-info/SOURCES.txt -> my-tox-tested-package-0.0.1/my_tox_tested_package.egg-info
+copying my_tox_tested_package.egg-info/dependency_links.txt -> my-tox-tested-package-0.0.1/my_tox_tested_package.egg-info
+copying my_tox_tested_package.egg-info/entry_points.txt -> my-tox-tested-package-0.0.1/my_tox_tested_package.egg-info
+copying my_tox_tested_package.egg-info/requires.txt -> my-tox-tested-package-0.0.1/my_tox_tested_package.egg-info
+copying my_tox_tested_package.egg-info/top_level.txt -> my-tox-tested-package-0.0.1/my_tox_tested_package.egg-info
+Writing my-tox-tested-package-0.0.1/setup.cfg
+creating '.tox/dist/my-tox-tested-package-0.0.1.zip' and adding 'my-tox-tested-package-0.0.1' to it
+adding 'my-tox-tested-package-0.0.1'
+adding 'my-tox-tested-package-0.0.1/my_tox_tested_package.egg-info'
+adding 'my-tox-tested-package-0.0.1/PKG-INFO'
+adding 'my-tox-tested-package-0.0.1/setup.py'
+adding 'my-tox-tested-package-0.0.1/setup.cfg'
+adding 'my-tox-tested-package-0.0.1/my_tox_tested_package.egg-info/PKG-INFO'
+adding 'my-tox-tested-package-0.0.1/my_tox_tested_package.egg-info/SOURCES.txt'
+adding 'my-tox-tested-package-0.0.1/my_tox_tested_package.egg-info/entry_points.txt'
+adding 'my-tox-tested-package-0.0.1/my_tox_tested_package.egg-info/requires.txt'
+adding 'my-tox-tested-package-0.0.1/my_tox_tested_package.egg-info/top_level.txt'
+adding 'my-tox-tested-package-0.0.1/my_tox_tested_package.egg-info/dependency_links.txt'
+removing 'my-tox-tested-package-0.0.1' (and everything under it)
