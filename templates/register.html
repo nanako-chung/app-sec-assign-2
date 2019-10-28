@@ -5,19 +5,15 @@
 		<title>Register</title>
 	</head>
 	<body>
-		<div class="register">
-			<h1>Register</h1>
-			<div class="links">
-				<a href="{{ url_for('login') }}">Login</a>
-				<a href="{{ url_for('register') }}"">Register</a>
-			</div>
-			<form action="{{ url_for('register') }}" method="post" autocomplete="off">
-				<input type="text" name="username" placeholder="Username" id="uname" required>
-				<input type="password" name="password" placeholder="Password" id="pword" required>
-				<input type="two_factor_auth" name="two_factor_auth" placeholder="Two Factor Auth" id="2fa" required>
-				<div class="msg" id="success">{{ msg }}</div>
-				<input type="submit" value="Register">
-			</form>
-		</div>
+		<h1>Register</h1>
+		<a href="{{ url_for('login') }}">Login</a>
+		<a href="{{ url_for('register') }}">Register</a>
+		<form action="{{ url_for('register') }}" method="post" autocomplete="off">
+			<input type="text" name="username" placeholder="Username" id="uname" required>
+			<input type="password" name="password" placeholder="Password" id="pword" required>
+			<input type="two_factor_auth" name="two_factor_auth" placeholder="Two Factor Auth" id="2fa" required>
+			<div class="msg" id="success">{{ msg }}</div>
+			<input type="submit" value="Register">
+		</form>
 	</body>
 </html>
