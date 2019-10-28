@@ -22,7 +22,7 @@ def create_app():
             username = request.form['username']
             password = request.form['password']
             hashedPassword = hashlib.md5(password.encode('utf-8')).hexdigest()
-            two_factor_auth = request.form['two_factor_auth'].encode('ascii', 'ignore')
+            two_factor_auth = request.form['two_factor_auth']
 
             # Check if account exists using dict
             account = {}
@@ -57,7 +57,7 @@ def create_app():
             username = request.form['username']
             password = request.form['password']
             hashedPassword = hashlib.md5(password.encode('utf-8')).hexdigest()
-            two_factor_auth = request.form['two_factor_auth'].encode('ascii', 'ignore')
+            two_factor_auth = request.form['two_factor_auth']
 
             # Check if account exists using dict
             account = {}
@@ -105,7 +105,7 @@ def create_app():
                 f.write(inputtext)
                 f.close()
                 output = subprocess.check_output(['./spell_check', 'input.txt', 'wordlist.txt']).split()
-                msg = ', '.join(output)
+                msg = b', '.join(output).decode()
             # User is loggedin show them the home page
             return render_template('spell_check.html', username=session['username'], msg=msg)
         # User is not loggedin redirect to login page
