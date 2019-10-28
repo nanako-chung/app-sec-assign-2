@@ -15,7 +15,7 @@ app.secret_key = 'your secret key'
 def login():
     # Output message if something goes wrong...
     msg = ''
-    # Check if "username" and "password" POST requests exist (user submitted form)
+    # Check if 'username' and 'password' POST requests exist (user submitted form)
     if request.method == 'POST' and 'username' in request.form and 'password' in request.form and 'two_factor_auth' in request.form:
         # Create variables for easy access
         username = request.form['username']
@@ -25,23 +25,24 @@ def login():
 
         # Check if account exists using dict
         account = {}
-        if username in accounts:
-            if accounts[username]['password'] == hashedPassword and accounts[username]['two_factor_auth'] == two_factor_auth:
+        if username in accounts and accounts[username]['password'] == hashedPassword:
+            if accounts[username]['two_factor_auth'] == two_factor_auth:
                 # Fetch one record from dict and return result
                 account['username'] = username
                 account['password'] = hashedPassword
                 account['two_factor_auth'] = two_factor_auth
-
-        # If account exists in accounts dict in out database
-        if bool(account):
-            # Create session data, we can access this data in other routes
-            session['loggedin'] = True
-            session['username'] = account['username']
-            # Redirect to home page
-            return redirect(url_for('spell_check'))
+                # Account exists in accounts dict in out database
+                # Create session data, we can access this data in other routes
+                session['loggedin'] = True
+                session['username'] = account['username']
+                msg = 'Success!'
+                # Redirect to home page
+                return redirect(url_for('spell_check'))
+            else:
+                msg = 'Failure: Incorrect two-factor authentication'
         else:
             # Account doesnt exist or username/password incorrect
-            msg = 'Incorrect'
+            msg = 'Failure: Incorrect username or password'
     return render_template('index.html', msg=msg)
 
 # http://localhost:5000/register - this will be the registration page, we need to use both GET and POST requests
@@ -49,7 +50,7 @@ def login():
 def register():
     # Output message if something goes wrong...
     msg = ''
-    # Check if "username" and "password" POST requests exist (user submitted form)
+    # Check if 'username' and 'password' POST requests exist (user submitted form)
     if request.method == 'POST' and 'username' in request.form and 'password' in request.form and 'two_factor_auth' in request.form:
         # Create variables for easy access
         username = request.form['username']
@@ -68,13 +69,13 @@ def register():
 
         # If account exists in accounts dict in out database
         if bool(account):
-            msg = 'Account already exists!'
+            msg = 'Failure: Account already exists!'
         elif not re.match(r'[A-Za-z0-9]+', username):
-            msg = 'Username must contain only characters and numbers!'
+            msg = 'Failure: Username must contain only characters and numbers!'
         elif not re.match(r'[0-9]+', two_factor_auth):
-            msg = 'Enter phone number for 2fa'
+            msg = 'Failure: Enter phone number for 2fa'
         elif not username or not password:
-            msg = 'Please fill out the form!'
+            msg = 'Failure: Please fill out the form!'
         else:
             # Account doesn't exists and the form data is valid, now insert new account into dict
             # Hash password
@@ -83,10 +84,10 @@ def register():
                 'password': hashedPassword,
                 'two_factor_auth': two_factor_auth
             }
-            msg = 'success'
+            msg = 'Success!'
     elif request.method == 'POST':
         # Form is empty... (no POST data)
-        msg = 'Please fill out the form!'
+        msg = 'Failure: Please fill out the form!'
     # Show registration form with message (if any)
     return render_template('register.html', msg=msg)
 
@@ -96,13 +97,13 @@ def spell_check():
     msg = ''
     # Check if user is loggedin
     if 'loggedin' in session:
-        if request.method == 'POST' and 'input_text' in request.form:
-            input_text = request.form['input_text']
-            # Put input_text into file
+        if request.method == 'POST' and 'inputtext' in request.form:
+            inputtext = request.form['inputtext']
+            # Put inputtext into file
             f = open('input.txt', 'w')
-            f.write(input_text)
+            f.write(inputtext)
             f.close()
-            output = subprocess.check_output(["./spell_check", 'input.txt', 'wordlist.txt']).split()
+            output = subprocess.check_output(['./spell_check', 'input.txt', 'wordlist.txt']).split()
             msg = ', '.join(output)
         # User is loggedin show them the home page
         return render_template('spell_check.html', username=session['username'], msg=msg)
