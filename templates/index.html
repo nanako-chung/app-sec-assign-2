@@ -8,7 +8,7 @@
 		<h1>Login</h1>
 		<a href="{{ url_for('login') }}">Login</a>
 		<a href="{{ url_for('register') }}">Register</a>
-		<form action="{{ url_for('login') }}" method="post">
+		<form action="{{ url_for('login') }}" method="post" autocomplete="off">
 			<input type="text" name="username" placeholder="Username" id="uname" required>
 			<input type="password" name="password" placeholder="Password" id="pword" required>
 			<input type="two_factor_auth" name="two_factor_auth" placeholder="Two Factor Auth" id="2fa" required>
