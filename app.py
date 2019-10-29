@@ -1,15 +1,35 @@
 from flask import Flask, render_template, request, redirect, url_for, session
+from flask_paranoid import Paranoid
+from flask_login import LoginManager, UserMixin, login_user, current_user
+from flask_wtf.csrf import CSRFProtect
+csrf = CSRFProtect()
 import hashlib
-# Create dict with key as user and value as { password, 2fa }
-accounts = {}
 import re
 import subprocess
+# Create dict with key as user and value as { password, 2fa }
+accounts = {}
+
+class User(UserMixin):
+    def __init__(self, username):
+        self.id = username
 
 def create_app():
     app = Flask(__name__)
+    app.config['SECRET_KEY'] = 'top-secret!'
+    csrf.init_app(app)
+    login_manager = LoginManager(app)
 
-    # Change this to your secret key (can be anything, it's for extra protection)
-    app.secret_key = 'your secret key'
+    @login_manager.user_loader
+    def load_user(id):
+        return User(id)
+
+    login_manager.session_protection = 'strong'
+    paranoid = Paranoid(app)
+    paranoid.redirect_view = '/login'
+
+    @paranoid.on_invalid_session
+    def invalid_session():
+        return 'Please login', 401
 
     # http://localhost:5000/login - this will be the login page, we need to use both GET and POST requests
     @app.route('/login', methods=['GET', 'POST'])
@@ -34,11 +54,9 @@ def create_app():
                     account['two_factor_auth'] = two_factor_auth
                     # Account exists in accounts dict in out database
                     # Create session data, we can access this data in other routes
-                    session['loggedin'] = True
-                    session['username'] = account['username']
+                    session['logged_in'] = True
+                    login_user(User(username))
                     msg = 'Success!'
-                    # Redirect to home page
-                    return redirect(url_for('spell_check'))
                 else:
                     msg = 'Failure: Incorrect two-factor authentication'
             else:
@@ -96,18 +114,19 @@ def create_app():
     @app.route('/spell_check', methods=['GET', 'POST'])
     def spell_check():
         msg = ''
+        inputtext = ''
         # Check if user is loggedin
-        if 'loggedin' in session:
+        if 'logged_in' in session:
             if request.method == 'POST' and 'inputtext' in request.form:
                 inputtext = request.form['inputtext']
                 # Put inputtext into file
                 f = open('input.txt', 'w')
                 f.write(inputtext)
                 f.close()
-                output = subprocess.check_output(['./spell_check', 'input.txt', 'wordlist.txt']).split()
-                msg = b', '.join(output).decode()
+                output = subprocess.getoutput('./spell_check input.txt wordlist.txt')
+                msg = ', '.join(output.split())
             # User is loggedin show them the home page
-            return render_template('spell_check.html', username=session['username'], msg=msg)
+            return render_template('spell_check.html', msg=msg, output=inputtext)
         # User is not loggedin redirect to login page
         return redirect(url_for('login'))
 
